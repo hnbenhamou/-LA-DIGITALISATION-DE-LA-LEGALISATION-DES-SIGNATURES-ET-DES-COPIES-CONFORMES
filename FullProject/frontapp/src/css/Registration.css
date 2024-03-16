@@ -1,0 +1,49 @@
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    margin-right: 370px;
+    color: #333; /* Couleur du texte du label */
+}
+img{
+    margin-left: 50px;
+}
+input {
+    width: 100%;
+    padding: 50px;
+    box-sizing: border-box;
+    border: 1px solid #ccc; /* Couleur de la bordure de l'input */
+}
+ul{
+    margin-left: 600px;
+}
+#recherche{
+    margin-left: 100px;
+}
+body {
+    background-image: url('https://www.rnp.ma/o/registry-services-theme/images/redfl.jpg');
+    /* Ajoutez d'autres propriétés pour spécifier la taille, la répétition, etc. */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+
+  }
+  .imagedefond { 
+  
+    
+    background-size: 30;
+    background-repeat: no-repeat;
+    background-position: left;
+  }
+  .custom-btn-primary {
+    background-color: #018043;
+    color: #ffffff;
+  }
+
+  
+ 
+
+  

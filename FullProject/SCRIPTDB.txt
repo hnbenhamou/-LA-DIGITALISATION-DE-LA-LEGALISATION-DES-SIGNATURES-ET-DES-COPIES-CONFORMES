@@ -1,0 +1,468 @@
+CREATE SCHEMA IF NOT EXISTS `projet` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `projet` ;
+
+-- -----------------------------------------------------
+-- Table `projet`.`commune`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`commune` (
+  `admin_id` BIGINT NULL DEFAULT NULL,
+  `arrond_id_arrond` BIGINT NULL DEFAULT NULL,
+  `id_com` BIGINT NOT NULL AUTO_INCREMENT,
+  `adresse` VARCHAR(255) NULL DEFAULT NULL,
+  `city` VARCHAR(255) NULL DEFAULT NULL,
+  `nom` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id_com`),
+  UNIQUE INDEX `UK_40cxslqnpvknsrqokgmx0v1kl` (`admin_id` ASC) VISIBLE,
+  INDEX `FKh52emagisfib8y69ctsch5bfq` (`arrond_id_arrond` ASC) VISIBLE,
+  CONSTRAINT `FK4by298ubht6xii76ph21o3h8x`
+    FOREIGN KEY (`admin_id`)
+    REFERENCES `projet`.`personne` (`id`),
+  CONSTRAINT `FKh52emagisfib8y69ctsch5bfq`
+    FOREIGN KEY (`arrond_id_arrond`)
+    REFERENCES `projet`.`arrondissement` (`id_arrond`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`personne`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`personne` (
+  `activated` BIT(1) NULL DEFAULT NULL,
+  `date_nais` VARCHAR(255) NULL DEFAULT NULL,
+  `arrond_id_arrond` BIGINT NULL DEFAULT NULL,
+  `commune_id_com` BIGINT NULL DEFAULT NULL,
+  `id` BIGINT NOT NULL,
+  `user_type` VARCHAR(31) NOT NULL,
+  `adr` VARCHAR(255) NULL DEFAULT NULL,
+  `city` VARCHAR(255) NULL DEFAULT NULL,
+  `cni` VARCHAR(255) NULL DEFAULT NULL,
+  `confirmation_code` VARCHAR(255) NULL DEFAULT NULL,
+  `email` VARCHAR(255) NULL DEFAULT NULL,
+  `nom` VARCHAR(255) NULL DEFAULT NULL,
+  `num_tel` VARCHAR(255) NULL DEFAULT NULL,
+  `password` VARCHAR(255) NULL DEFAULT NULL,
+  `poste` VARCHAR(255) NULL DEFAULT NULL,
+  `prenom` VARCHAR(255) NULL DEFAULT NULL,
+  `signature` VARCHAR(255) NULL DEFAULT NULL,
+  `status` VARCHAR(255) NULL DEFAULT NULL,
+  `approved` BIT(1) NOT NULL,
+  `document` VARCHAR(255) NULL DEFAULT NULL,
+  `rejected` BIT(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `UK_85hd2avxogjds7tch4n3sjfkd` (`arrond_id_arrond` ASC) VISIBLE,
+  UNIQUE INDEX `UK_hgav47cnf7iv3rmboc4hsw18g` (`commune_id_com` ASC) VISIBLE,
+  UNIQUE INDEX `UK_lif11ug7pqkdimuk0beonbfng` (`email` ASC) VISIBLE,
+  CONSTRAINT `FK1k3o3h3e0g69lgnjpp9e88r6w`
+    FOREIGN KEY (`commune_id_com`)
+    REFERENCES `projet`.`commune` (`id_com`),
+  CONSTRAINT `FKdvhhqfg0xbldjc80s7k03d3v8`
+    FOREIGN KEY (`arrond_id_arrond`)
+    REFERENCES `projet`.`arrondissement` (`id_arrond`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`arrondissement`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`arrondissement` (
+  `admin_id` BIGINT NULL DEFAULT NULL,
+  `id_arrond` BIGINT NOT NULL AUTO_INCREMENT,
+  `adresse` VARCHAR(255) NULL DEFAULT NULL,
+  `city` VARCHAR(255) NULL DEFAULT NULL,
+  `nom` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id_arrond`),
+  UNIQUE INDEX `UK_cgb2eg7ucll7h5vtfyr10t81o` (`admin_id` ASC) VISIBLE,
+  CONSTRAINT `FKiwb0ksp7bh0ieu8oc686jdtpq`
+    FOREIGN KEY (`admin_id`)
+    REFERENCES `projet`.`personne` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`arrondissement_comunne`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`arrondissement_comunne` (
+  `arrondissement_id_arrond` BIGINT NOT NULL,
+  `comunne_id_com` BIGINT NOT NULL,
+  UNIQUE INDEX `UK_cpm95d76cqqb3bopb5v2f8u4b` (`comunne_id_com` ASC) VISIBLE,
+  INDEX `FKsfy6vxnqrhrc1657c9jh629t0` (`arrondissement_id_arrond` ASC) VISIBLE,
+  CONSTRAINT `FKjtr5rs91ett3hbl87vlp2lajg`
+    FOREIGN KEY (`comunne_id_com`)
+    REFERENCES `projet`.`commune` (`id_com`),
+  CONSTRAINT `FKsfy6vxnqrhrc1657c9jh629t0`
+    FOREIGN KEY (`arrondissement_id_arrond`)
+    REFERENCES `projet`.`arrondissement` (`id_arrond`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`arrondissement_fonctionnaire`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`arrondissement_fonctionnaire` (
+  `arrondissement_id_arrond` BIGINT NOT NULL,
+  `fonctionnaire_id` BIGINT NOT NULL,
+  UNIQUE INDEX `UK_i04oidm0iyhgar3emhf4xo6it` (`fonctionnaire_id` ASC) VISIBLE,
+  INDEX `FKnlwgwk7n6yrdmb7wlhx288w2i` (`arrondissement_id_arrond` ASC) VISIBLE,
+  CONSTRAINT `FKkho5cufsfkgb3aoep4yww5cf5`
+    FOREIGN KEY (`fonctionnaire_id`)
+    REFERENCES `projet`.`personne` (`id`),
+  CONSTRAINT `FKnlwgwk7n6yrdmb7wlhx288w2i`
+    FOREIGN KEY (`arrondissement_id_arrond`)
+    REFERENCES `projet`.`arrondissement` (`id_arrond`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`commune_citoyen`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`commune_citoyen` (
+  `citoyen_id` BIGINT NOT NULL,
+  `commune_id_com` BIGINT NOT NULL,
+  UNIQUE INDEX `UK_b1cvrksolyds2fmr96qq7jfok` (`citoyen_id` ASC) VISIBLE,
+  INDEX `FK3ep4ratfs6cvppkn6fpn1u3xt` (`commune_id_com` ASC) VISIBLE,
+  CONSTRAINT `FK3ep4ratfs6cvppkn6fpn1u3xt`
+    FOREIGN KEY (`commune_id_com`)
+    REFERENCES `projet`.`commune` (`id_com`),
+  CONSTRAINT `FK9m8m7balx11sk1q6m8tcxlgdm`
+    FOREIGN KEY (`citoyen_id`)
+    REFERENCES `projet`.`personne` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`commune_fonctionnaire`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`commune_fonctionnaire` (
+  `commune_id_com` BIGINT NOT NULL,
+  `fonctionnaire_id` BIGINT NOT NULL,
+  UNIQUE INDEX `UK_l701hga5girciba135q0ospkq` (`fonctionnaire_id` ASC) VISIBLE,
+  INDEX `FK375k19662kyae57ya4is3gymr` (`commune_id_com` ASC) VISIBLE,
+  CONSTRAINT `FK375k19662kyae57ya4is3gymr`
+    FOREIGN KEY (`commune_id_com`)
+    REFERENCES `projet`.`commune` (`id_com`),
+  CONSTRAINT `FKa87sjf2dqhec66rjpxyiv0e6k`
+    FOREIGN KEY (`fonctionnaire_id`)
+    REFERENCES `projet`.`personne` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`copie_conforme`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`copie_conforme` (
+  `etat` BIT(1) NOT NULL,
+  `citoyen_id` BIGINT NULL DEFAULT NULL,
+  `id_c` BIGINT NOT NULL,
+  `document` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id_c`),
+  INDEX `FKpny71pj6ltccju6gbj3gmaciw` (`citoyen_id` ASC) VISIBLE,
+  CONSTRAINT `FKpny71pj6ltccju6gbj3gmaciw`
+    FOREIGN KEY (`citoyen_id`)
+    REFERENCES `projet`.`personne` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`copie_conforme_seq`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`copie_conforme_seq` (
+  `next_val` BIGINT NULL DEFAULT NULL)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`egalisation`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`egalisation` (
+  `etat` INT NOT NULL,
+  `citoyen_id` BIGINT NULL DEFAULT NULL,
+  `date` DATETIME(6) NULL DEFAULT NULL,
+  `fonct_id` BIGINT NULL DEFAULT NULL,
+  `id_e` BIGINT NOT NULL,
+  `document` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id_e`),
+  INDEX `FK7562hsachuyi02wvvg00nlt7a` (`citoyen_id` ASC) VISIBLE,
+  INDEX `FK8pnaux0jhknuoqyg2s95nc833` (`fonct_id` ASC) VISIBLE,
+  CONSTRAINT `FK7562hsachuyi02wvvg00nlt7a`
+    FOREIGN KEY (`citoyen_id`)
+    REFERENCES `projet`.`personne` (`id`),
+  CONSTRAINT `FK8pnaux0jhknuoqyg2s95nc833`
+    FOREIGN KEY (`fonct_id`)
+    REFERENCES `projet`.`personne` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`egalisation_seq`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`egalisation_seq` (
+  `next_val` BIGINT NULL DEFAULT NULL)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`inscription`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`inscription` (
+  `etat` BIT(1) NOT NULL,
+  `admin_id` BIGINT NULL DEFAULT NULL,
+  `citoyen_id` BIGINT NULL DEFAULT NULL,
+  `date` DATETIME(6) NULL DEFAULT NULL,
+  `id_i` BIGINT NOT NULL,
+  PRIMARY KEY (`id_i`),
+  UNIQUE INDEX `UK_j6o1rvlsdd46n6gnt5370x4c3` (`citoyen_id` ASC) VISIBLE,
+  INDEX `FK4203ryi4shojg1up2whpntx0u` (`admin_id` ASC) VISIBLE,
+  CONSTRAINT `FK4203ryi4shojg1up2whpntx0u`
+    FOREIGN KEY (`admin_id`)
+    REFERENCES `projet`.`personne` (`id`),
+  CONSTRAINT `FKqld8mbpe5fvqqsbykuquih7by`
+    FOREIGN KEY (`citoyen_id`)
+    REFERENCES `projet`.`personne` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`inscription_seq`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`inscription_seq` (
+  `next_val` BIGINT NULL DEFAULT NULL)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`modification`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`modification` (
+  `citoyen_id` BIGINT NULL DEFAULT NULL,
+  `date` DATETIME(6) NULL DEFAULT NULL,
+  `fonct_id` BIGINT NULL DEFAULT NULL,
+  `id_m` BIGINT NOT NULL,
+  `document` VARCHAR(255) NULL DEFAULT NULL,
+  `etat` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id_m`),
+  INDEX `FKe81jhm1r7w8df1mhfiqyje5kp` (`citoyen_id` ASC) VISIBLE,
+  INDEX `FK1xh39tphnbtu0yvmn18t7x5ib` (`fonct_id` ASC) VISIBLE,
+  CONSTRAINT `FK1xh39tphnbtu0yvmn18t7x5ib`
+    FOREIGN KEY (`fonct_id`)
+    REFERENCES `projet`.`personne` (`id`),
+  CONSTRAINT `FKe81jhm1r7w8df1mhfiqyje5kp`
+    FOREIGN KEY (`citoyen_id`)
+    REFERENCES `projet`.`personne` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`modification_request`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`modification_request` (
+  `date_nais` DATE NULL DEFAULT NULL,
+  `id` BIGINT NOT NULL,
+  `adr` VARCHAR(255) NULL DEFAULT NULL,
+  `city` VARCHAR(255) NULL DEFAULT NULL,
+  `cni` VARCHAR(255) NULL DEFAULT NULL,
+  `document` VARCHAR(255) NULL DEFAULT NULL,
+  `nom` VARCHAR(255) NULL DEFAULT NULL,
+  `num_tel` VARCHAR(255) NULL DEFAULT NULL,
+  `password` VARCHAR(255) NULL DEFAULT NULL,
+  `prenom` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`modification_request_seq`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`modification_request_seq` (
+  `next_val` BIGINT NULL DEFAULT NULL)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`modification_seq`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`modification_seq` (
+  `next_val` BIGINT NULL DEFAULT NULL)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`personne_egal`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`personne_egal` (
+  `egal_id_e` BIGINT NOT NULL,
+  `fonctionnaire_id` BIGINT NOT NULL,
+  UNIQUE INDEX `UK_gb67wnpufjhjlydpf5winwbe5` (`egal_id_e` ASC) VISIBLE,
+  INDEX `FKhagm1qmg6oyedoudba8xqkog9` (`fonctionnaire_id` ASC) VISIBLE,
+  CONSTRAINT `FKhagm1qmg6oyedoudba8xqkog9`
+    FOREIGN KEY (`fonctionnaire_id`)
+    REFERENCES `projet`.`personne` (`id`),
+  CONSTRAINT `FKhsbdyj0p57yagmdif6snbt95a`
+    FOREIGN KEY (`egal_id_e`)
+    REFERENCES `projet`.`egalisation` (`id_e`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`personne_egalisation`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`personne_egalisation` (
+  `citoyen_id` BIGINT NOT NULL,
+  `egalisation_id_e` BIGINT NOT NULL,
+  UNIQUE INDEX `UK_4bdygqsvk2ml5j8llvohaqppg` (`egalisation_id_e` ASC) VISIBLE,
+  INDEX `FKgvkdep5mhoqk6puru48v2odor` (`citoyen_id` ASC) VISIBLE,
+  CONSTRAINT `FK111d4r4uxqbpea8q5g7lgye7f`
+    FOREIGN KEY (`egalisation_id_e`)
+    REFERENCES `projet`.`egalisation` (`id_e`),
+  CONSTRAINT `FKgvkdep5mhoqk6puru48v2odor`
+    FOREIGN KEY (`citoyen_id`)
+    REFERENCES `projet`.`personne` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`personne_modif`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`personne_modif` (
+  `fonctionnaire_id` BIGINT NOT NULL,
+  `modif_id_m` BIGINT NOT NULL,
+  UNIQUE INDEX `UK_arags35s5aaf1bsgq6uaagk81` (`modif_id_m` ASC) VISIBLE,
+  INDEX `FKnacoci6t9iobvkkdtlr5g4sdg` (`fonctionnaire_id` ASC) VISIBLE,
+  CONSTRAINT `FK9t0q264mv9towo21nwb9hu4yw`
+    FOREIGN KEY (`modif_id_m`)
+    REFERENCES `projet`.`modification` (`id_m`),
+  CONSTRAINT `FKnacoci6t9iobvkkdtlr5g4sdg`
+    FOREIGN KEY (`fonctionnaire_id`)
+    REFERENCES `projet`.`personne` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`personne_modification`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`personne_modification` (
+  `citoyen_id` BIGINT NOT NULL,
+  `modification_id_m` BIGINT NOT NULL,
+  UNIQUE INDEX `UK_g7el2va98huk9fce5babw71te` (`modification_id_m` ASC) VISIBLE,
+  INDEX `FKj67teqku89nfr6tq7rt124dgl` (`citoyen_id` ASC) VISIBLE,
+  CONSTRAINT `FKj67teqku89nfr6tq7rt124dgl`
+    FOREIGN KEY (`citoyen_id`)
+    REFERENCES `projet`.`personne` (`id`),
+  CONSTRAINT `FKtoc1y1r2tkst9u34mhux3wh68`
+    FOREIGN KEY (`modification_id_m`)
+    REFERENCES `projet`.`modification` (`id_m`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`reclamation`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`reclamation` (
+  `citoyen_id` BIGINT NULL DEFAULT NULL,
+  `date` DATETIME(6) NULL DEFAULT NULL,
+  `fonct_id` BIGINT NULL DEFAULT NULL,
+  `id_r` BIGINT NOT NULL,
+  `etat` VARCHAR(255) NULL DEFAULT NULL,
+  `nature` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id_r`),
+  INDEX `FKisah3qby30fkvlm2ems2ln74i` (`citoyen_id` ASC) VISIBLE,
+  INDEX `FKhj87kfif2o3comrnssc2rcvsv` (`fonct_id` ASC) VISIBLE,
+  CONSTRAINT `FKhj87kfif2o3comrnssc2rcvsv`
+    FOREIGN KEY (`fonct_id`)
+    REFERENCES `projet`.`personne` (`id`),
+  CONSTRAINT `FKisah3qby30fkvlm2ems2ln74i`
+    FOREIGN KEY (`citoyen_id`)
+    REFERENCES `projet`.`personne` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`personne_reclamation`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`personne_reclamation` (
+  `citoyen_id` BIGINT NOT NULL,
+  `fonctionnaire_id` BIGINT NOT NULL,
+  `reclamation_id_r` BIGINT NOT NULL,
+  UNIQUE INDEX `UK_55cmkmqoir9pfxfh9vuwi2sas` (`reclamation_id_r` ASC) VISIBLE,
+  INDEX `FK3ns8cq8kom2sc46f98wyyy70w` (`fonctionnaire_id` ASC) VISIBLE,
+  INDEX `FKsblgqim7fejahq91fwq6gcp3i` (`citoyen_id` ASC) VISIBLE,
+  CONSTRAINT `FK3ns8cq8kom2sc46f98wyyy70w`
+    FOREIGN KEY (`fonctionnaire_id`)
+    REFERENCES `projet`.`personne` (`id`),
+  CONSTRAINT `FKa6fsradjdmamm5oe5h4crjs8k`
+    FOREIGN KEY (`reclamation_id_r`)
+    REFERENCES `projet`.`reclamation` (`id_r`),
+  CONSTRAINT `FKsblgqim7fejahq91fwq6gcp3i`
+    FOREIGN KEY (`citoyen_id`)
+    REFERENCES `projet`.`personne` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`personne_seq`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`personne_seq` (
+  `next_val` BIGINT NULL DEFAULT NULL)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `projet`.`reclamation_seq`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `projet`.`reclamation_seq` (
+  `next_val` BIGINT NULL DEFAULT NULL)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
